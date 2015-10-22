@@ -1,5 +1,6 @@
 package roulette;
 
+import roulette.bets.BetFactory;
 import roulette.bets.OddEven;
 import roulette.bets.RedBlack;
 import roulette.bets.ThreeConsecutive;
@@ -15,6 +16,8 @@ public class Game {
     // name of the game
     private static final String DEFAULT_NAME = "Roulette";
     // add new bet subclasses here
+    
+    private BetFactory myFactory;
     private Bet[] myPossibleBets = {
         new RedBlack("Red or Black", 1),
         new OddEven("Odd or Even", 1),
@@ -26,6 +29,7 @@ public class Game {
      * Construct the game.
      */
     public Game () {
+    	myFactory = new BetFactory();
         myWheel = new Wheel();
     }
 
@@ -68,11 +72,9 @@ public class Game {
      * Prompt the user to make a bet from a menu of choices.
      */
     private Bet promptForBet () {
-        System.out.println("You can make one of the following types of bets:");
-        for (int k = 0; k < myPossibleBets.length; k++) {
-            System.out.println(String.format("%d) %s", (k + 1), myPossibleBets[k]));
-        }
+    	BetFactory factory = new BetFactory();
+    	factory.printAllBets();
         int response = ConsoleReader.promptRange("Please make a choice", 1, myPossibleBets.length);
-        return myPossibleBets[response - 1];
+        return myFactory.getBet(response);
     }
 }
